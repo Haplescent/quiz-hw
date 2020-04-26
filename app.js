@@ -44,7 +44,12 @@ let state = {
   },
 
   quiz: {
-    html: "<h1>Quiz</h1>",
+    html: `
+    <div class="d-flex flex-column flex-md-row align-items-md-center p-5 bg-light">
+    <div class="pt-md-3 pb-md-4">
+      <h1 class="bd-title mt-0">Star Wars Quiz<h1>
+    </div>
+  </div>`,
     numOfAnswers: 4,
     question: {
       questionArray: [
@@ -60,9 +65,13 @@ let state = {
         "Qustion10",
       ],
       questionIndex: 0,
-      html: `<h2>{this.questionArray[this.questionIndex]}</h2>`,
       render: function () {
-        $("#main").append(`<h2>${this.questionArray[this.questionIndex]}</h2>`);
+        $("#main").append(`
+        <div class="d-flex flex-column flex-md-row align-items-md-center p-5 bg-light">
+        <div class="pt-md-3 pb-md-4">
+        <h2>${this.questionArray[this.questionIndex]}</h2>
+        </div>
+      </div>`);
       },
     },
     answer: {
@@ -129,28 +138,44 @@ let state = {
       render: function () {
         for (let i = 0; i < this.answerArray[this.answerIndex].length; i++)
           $("#main").append(
-            `<button type="button" onclick="state.quiz.answer.setState(${i})">${
+            `<button type="button" class="btn btn-primary" onclick="state.quiz.answer.setState(${i})">${
               this.answerArray[this.answerIndex][i]
             }</button>`
           );
       },
       setState: function (i) {
+        console.log(this.answerIndex === 0);
+        console.log(count <= 1);
+        console.log(this.answerIndex === 9);
         if (this.answerIndex === 0) {
           setInterval(state.header.clock.timer, 1000);
-        }
-        if (count === 0 || this.answerIndex === 9) {
+          state.quiz.question.questionIndex++;
+          this.answerIndex++;
+          console.log(this.answerArray[this.answerIndex].length);
+          state.clearMain();
+          state.render();
+        } else if (count <= 1 || this.answerIndex === 9) {
+          state.clearMain();
           state.endGame();
         } else if (this.correctAnswerArray[this.answerIndex] === i) {
-          state.feedback.html = "<h1>Correct!</h1>";
+          state.feedback.html = `<div class="alert alert-success" role="alert">
+          Correct!</div>`;
+          state.quiz.question.questionIndex++;
+          this.answerIndex++;
+          console.log(this.answerArray[this.answerIndex].length);
+          state.clearMain();
+          state.render();
         } else {
-          state.feedback.html = "<h1>Incorrect!</h1>";
+          state.feedback.html = `<div class="alert alert-primary" role="alert">
+          Incorrect!
+        </div>`;
           count = count - 5;
+          state.quiz.question.questionIndex++;
+          this.answerIndex++;
+          console.log(this.answerArray[this.answerIndex].length);
+          state.clearMain();
+          state.render();
         }
-        state.quiz.question.questionIndex++;
-        this.answerIndex++;
-        console.log(this.answerArray[this.answerIndex].length);
-        state.clearMain();
-        state.render();
       },
     },
     render: function () {
@@ -192,9 +217,10 @@ let state = {
       });
     });
     let html = `<form action="">
-    Name: <input type="text" name="FirstName" value="Mickey">
+    <div class="form-group">
+    <input type="text" name="FirstName" value="Mickey">
     <input type="submit" value="Submit">
-  </form>
+  </div></form>
     `;
     state.clearMain();
     score = count;
