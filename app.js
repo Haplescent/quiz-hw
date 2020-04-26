@@ -8,7 +8,6 @@ let state = {
     </div>
   </header>`,
     clock: {
-      time: 60,
       html: `<div class="timer">
       <div class="circle-timer">
           <div class="timer-slot">
@@ -21,8 +20,6 @@ let state = {
       </div>
   </div>`,
       render: function () {
-        // var count = state.header.clock.time;
-        setInterval(timer, 1000);
         $("#main").append(this.html);
       },
       setState: function () {},
@@ -39,7 +36,7 @@ let state = {
     numOfAnswers: 4,
     question: {
       questionArray: [
-        "Qustion1",
+        "Welcome to the Quiz.  This quiz is on Star Wars!",
         "Qustion2",
         "Qustion3",
         "Qustion4",
@@ -57,15 +54,10 @@ let state = {
       },
     },
     answer: {
-      correctAnswerArray: [1, 1],
+      correctAnswerArray: [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       numOfAnswers: 4,
       answerArray: [
-        [
-          "Qustion1Answer1",
-          "Qustion1Answer2",
-          "Qustion1Answer3",
-          "Qustion1Answer4",
-        ],
+        ["Start Quiz"],
         [
           "Qustion2Answer1",
           "Qustion2Answer2",
@@ -123,7 +115,7 @@ let state = {
       ],
       answerIndex: 0,
       render: function () {
-        for (let i = 0; i < this.numOfAnswers; i++)
+        for (let i = 0; i < this.answerArray[this.answerIndex].length; i++)
           $("#main").append(
             `<button type="button" onclick="state.quiz.answer.setState(${i})">${
               this.answerArray[this.answerIndex][i]
@@ -132,21 +124,17 @@ let state = {
       },
       setState: function (i) {
         if (this.correctAnswerArray[this.answerIndex] === i) {
-          console.log(i);
-          state.quiz.question.questionIndex++;
-          state.quiz.answer.answerIndex++;
           state.feedback.html = "<h1>Correct!</h1>";
-          state.clearMain();
-          state.render();
         } else {
-          console.log(i);
-          state.quiz.question.questionIndex++;
-          state.quiz.answer.answerIndex++;
           state.feedback.html = "<h1>Incorrect!</h1>";
-          state.header.clock.time = state.header.clock.time - 5;
-          state.clearMain();
-          state.render();
+          count = count - 5;
         }
+        state.quiz.question.questionIndex++;
+        this.answerIndex++;
+        console.log(this.answerArray[this.answerIndex].length);
+
+        state.clearMain();
+        state.render();
       },
     },
     render: function () {
@@ -156,7 +144,7 @@ let state = {
     },
   },
   feedback: {
-    html: "<h1>You got it wrong or right</h1>",
+    html: "",
     render: function () {
       $("#main").append(this.html);
     },
@@ -171,33 +159,28 @@ let state = {
   clearMain: function () {
     $("#main").empty();
   },
+
+  initalize: function () {
+    state.render();
+
+    function timer() {
+      if (!timerPause) {
+        count = count - 1;
+        if (count <= -1) {
+          count = initialCount;
+          var el = $(".circle-timer");
+          el.before(el.clone(true)).remove();
+        }
+        $(".timer .count").text(count);
+      }
+    }
+
+    setInterval(timer, 1000);
+  },
 };
 
-state.render();
-
-// timer
 var initialCount = 60,
   count = initialCount,
   timerPause = false;
 
-function timer() {
-  if (!timerPause) {
-    count = count - 1;
-    state.header.time = count;
-    if (count <= -1) {
-      count = initialCount;
-      var el = $(".circle-timer");
-      el.before(el.clone(true)).remove();
-    }
-    $(".timer .count").text(count);
-  }
-}
-
-$(".circle-timer").click(function () {
-  $(this).toggleClass("paused");
-  if ($(this).hasClass("paused")) {
-    timerPause = true;
-  } else {
-    timerPause = false;
-  }
-});
+state.initalize();
