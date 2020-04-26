@@ -138,7 +138,7 @@ let state = {
         if (this.answerIndex === 0) {
           setInterval(state.header.clock.timer, 1000);
         }
-        if (count <= 1 || this.answerIndex === 9) {
+        if (count === 0 || this.answerIndex === 9) {
           state.endGame();
         } else if (this.correctAnswerArray[this.answerIndex] === i) {
           state.feedback.html = "<h1>Correct!</h1>";
