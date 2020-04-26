@@ -8,15 +8,27 @@ let state = {
     </div>
   </header>`,
     clock: {
-      html: `<div class="timer">
-      <div class="circle-timer">
-          <div class="timer-slot">
-              <div class="timer-lt"> </div>
+      timer: function () {
+        if (!timerPause) {
+          count = count - 1;
+          if (count <= -1) {
+            count = 0;
+            timerPause = true;
+            var el = $(".circle-timer .bd-lead .bd-title .mt-0");
+            el.before(el.clone(true)).remove();
+          }
+          $(".timer .count").text(count);
+        }
+      },
+      html: `<div class="timer bd-lead">
+      <div class="circle-timer bd-title mt-0 bd-lead">
+          <div class="timer-slot bd-title mt-0 bd-lead">
+              <div class="timer-lt bd-title mt-0 bd-lead"> </div>
           </div>
-          <div class="timer-slot">
-              <div class="timer-rt"></div>
+          <div class="timer-slot bd-title mt-0 bd-lead">
+              <div class="timer-rt bd-title mt-0 bd-lead"></div>
           </div>
-          <div class="count"></div>
+          <div class="count bd-lead bd-title mt-0"></div>
       </div>
   </div>`,
       render: function () {
@@ -123,7 +135,12 @@ let state = {
           );
       },
       setState: function (i) {
-        if (this.correctAnswerArray[this.answerIndex] === i) {
+        if (this.answerIndex === 0) {
+          setInterval(state.header.clock.timer, 1000);
+        }
+        if (count <= 1 || this.answerIndex === 9) {
+          state.endGame();
+        } else if (this.correctAnswerArray[this.answerIndex] === i) {
           state.feedback.html = "<h1>Correct!</h1>";
         } else {
           state.feedback.html = "<h1>Incorrect!</h1>";
@@ -132,7 +149,6 @@ let state = {
         state.quiz.question.questionIndex++;
         this.answerIndex++;
         console.log(this.answerArray[this.answerIndex].length);
-
         state.clearMain();
         state.render();
       },
@@ -160,22 +176,66 @@ let state = {
     $("#main").empty();
   },
 
-  initalize: function () {
-    state.render();
-
-    function timer() {
-      if (!timerPause) {
-        count = count - 1;
-        if (count <= -1) {
-          count = initialCount;
-          var el = $(".circle-timer");
-          el.before(el.clone(true)).remove();
+  endGame: function () {
+    $(document).ready(function () {
+      $("form").submit(function (e) {
+        e.preventDefault();
+        if ($("input").first().val() === "") {
+          alert("Must type something");
+        } else {
+          alert("Submitted");
+          $("input").first().val();
+          window.localStorage.setItem($("input").first().val(), score);
+          state.clearMain();
+          state.highScore.render();
         }
-        $(".timer .count").text(count);
-      }
-    }
+      });
+    });
+    let html = `<form action="">
+    Name: <input type="text" name="FirstName" value="Mickey">
+    <input type="submit" value="Submit">
+  </form>
+    `;
+    state.clearMain();
+    score = count;
+    console.log(score);
+    $("#main").append(html);
+  },
 
-    setInterval(timer, 1000);
+  highScore: {
+    html: `<table id='table' border='1'>
+    </table>`,
+    render: function () {
+      $("#main").append(this.html);
+      scoresObject = this.getScores();
+      sortedScores = this.sortScores(scoresObject);
+      for (let i = 0; i < sortedScores.length; i++) {
+        if (scoresObject[sortedScores[i]] != null) {
+          rowHtml = `<tr><td>${scoresObject[sortedScores[i]]}</td><td>${
+            sortedScores[i]
+          }</td></tr>`;
+          $("#table").prepend(rowHtml);
+        }
+      }
+    },
+    sortScores: function (list) {
+      //   var list = { you: 100, me: 75, foo: 116, bar: 15 };
+      keysSorted = Object.keys(list).sort(function (a, b) {
+        return list[a] - list[b];
+      });
+      console.log(keysSorted);
+      return keysSorted;
+    },
+    getScores: function () {
+      let itemsObj = {};
+      for (var key in window.localStorage) {
+        console.log(key);
+        console.log(JSON.parse(window.localStorage.getItem(key)));
+        itemsObj[key] = JSON.parse(window.localStorage.getItem(key));
+      }
+      console.log(itemsObj);
+      return itemsObj;
+    },
   },
 };
 
@@ -183,4 +243,4 @@ var initialCount = 60,
   count = initialCount,
   timerPause = false;
 
-state.initalize();
+state.render();

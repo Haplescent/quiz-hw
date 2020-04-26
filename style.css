@@ -20,83 +20,74 @@
     transform: rotate(135deg);
   }
 }
-
 .timer {
   width: 100%;
   height: 100%;
   position: fixed;
-
-  .circle-timer {
-    width: 200px;
-    height: 200px;
-    margin: 2rem auto;
-    position: relative;
-    cursor: pointer;
-
-    .timer-slot {
-      position: relative;
-      width: 100px;
-      height: 200px;
-      display: inline-block;
-      overflow: hidden;
-      float: left;
-
-      .timer-lt,
-      .timer-rt {
-        border-radius: 50%;
-        position: relative;
-        top: 50%;
-        left: 0;
-        z-index: 15;
-        border: 10px solid white;
-        width: 180px;
-        height: 180px;
-        margin-left: -100px;
-        margin-top: -100px;
-        border-left-color: transparent;
-        border-top-color: transparent;
-        z-index: 5;
-      }
-      .timer-lt {
-        animation: 10s linear infinite timer-slide-lt;
-        left: 100%;
-      }
-      .timer-rt {
-        animation: 10s linear infinite timer-slide-rt;
-      }
-    }
-    .count {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      font-size: 8rem;
-      color: white;
-      text-align: center;
-      line-height: 200px;
-      font-family: sans-serif;
-    }
-    &.paused {
-      .timer-lt,
-      .timer-rt {
-        animation-play-state: paused;
-        transition: all 0.5s;
-      }
-    }
-    &.paused,
-    &:hover {
-      .timer-lt,
-      .timer-rt {
-        border: 10px solid rgba(white, 0.5);
-        border-left-color: transparent;
-        border-top-color: transparent;
-        transition: all 0.5s;
-      }
-    }
-    &.paused {
-      .count {
-        color: rgba(white, 0.5);
-        transition: all 0.5s;
-      }
-    }
-  }
+}
+.timer .circle-timer {
+  width: 200px;
+  height: 200px;
+  margin: 2rem auto;
+  position: relative;
+  cursor: pointer;
+}
+.timer .circle-timer .timer-slot {
+  position: relative;
+  width: 100px;
+  height: 200px;
+  display: inline-block;
+  overflow: hidden;
+  float: left;
+}
+.timer .circle-timer .timer-slot .timer-lt,
+.timer .circle-timer .timer-slot .timer-rt {
+  border-radius: 50%;
+  position: relative;
+  top: 50%;
+  left: 0;
+  z-index: 15;
+  border: 10px solid blue;
+  width: 180px;
+  height: 180px;
+  margin-left: -100px;
+  margin-top: -100px;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  z-index: 5;
+}
+.timer .circle-timer .timer-slot .timer-lt {
+  animation: 10s linear infinite timer-slide-lt;
+  left: 100%;
+}
+.timer .circle-timer .timer-slot .timer-rt {
+  animation: 10s linear infinite timer-slide-rt;
+}
+.timer .circle-timer .count {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-size: 8rem;
+  color: blue;
+  text-align: center;
+  line-height: 200px;
+  font-family: sans-serif;
+}
+.timer .circle-timer.paused .timer-lt,
+.timer .circle-timer.paused .timer-rt {
+  animation-play-state: paused;
+  transition: all 0.5s;
+}
+.timer .circle-timer.paused .timer-lt,
+.timer .circle-timer:hover .timer-lt,
+.timer .circle-timer.paused .timer-rt,
+.timer .circle-timer:hover .timer-rt {
+  border: 10px solid rgba(255, 255, 255, 0.5);
+  border-left-color: transparent;
+  border-top-color: transparent;
+  transition: all 0.5s;
+}
+.timer .circle-timer.paused .count {
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.5s;
 }
