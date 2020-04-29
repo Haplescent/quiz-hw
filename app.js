@@ -166,7 +166,7 @@ let state = {
           state.clearMain();
           state.render();
         } else {
-          state.feedback.html = `<div class="alert alert-primary" role="alert">
+          state.feedback.html = `<div class="alert alert-danger" role="alert">
           Incorrect!
         </div>`;
           count = count - 5;
@@ -216,7 +216,7 @@ let state = {
         }
       });
     });
-    let html = `<form action="">
+    let html = `<form action="" bg-light>
     <div class="form-group">
     <input type="text" name="FirstName" value="Mickey">
     <input type="submit" value="Submit">
@@ -265,7 +265,7 @@ let state = {
   },
 };
 
-var initialCount = 60,
+var initialCount = 10,
   count = initialCount,
   timerPause = false;
 
